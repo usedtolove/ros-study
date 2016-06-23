@@ -1,0 +1,22 @@
+<!-- Here we start the launch file with the launch tag, so that the file is identified as a launch file. -->
+<launch>
+
+  <!-- Here we start two groups with a namespace tag of turtlesim1
+  and turtlesim2 with a turtlesim node with a name of sim.
+  This allows us to start two simulators without having name conflicts. -->
+  <group ns="turtlesim1">
+    <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+  </group>
+
+  <group ns="turtlesim2">
+    <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+  </group>
+
+  <!-- Here we start the mimic node with the topics input and output renamed to turtlesim1 and turtlesim2.
+  This renaming will cause turtlesim2 to mimic turtlesim1. -->
+  <node pkg="turtlesim" name="mimic" type="mimic">
+    <remap from="input" to="turtlesim1/turtle1"/>
+    <remap from="output" to="turtlesim2/turtle1"/>
+  </node>
+
+</launch>

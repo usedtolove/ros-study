@@ -1,3 +1,7 @@
+# ROS
+**/catkin_ws/**/devel
+**/catkin_ws/**/build
+
 # Compiled Object files
 *.slo
 *.lo

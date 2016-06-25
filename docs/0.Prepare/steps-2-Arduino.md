@@ -4,18 +4,26 @@
 1. Get Arduino IDE
 > download from: https://www.arduino.cc/  
 > extract file to folder  
+> gedit ~/.bashrc, add: export PATH=/home/hjl/program/arduino-1.6.9:$PATH
 
-2. Run IDE
-> cd arduino-1.6.9  
-> sudo ./arduino
+2. add user to dialout group
+> sudo usermod -a -G dialout [yourname]  
+> logout + login
 
-3. HelloWorld
-> connect arduino with use cable  
-> File > Examples > Basic > Blink
-> do compile + upload  
-
-4. create desktop luncher
+3. create desktop luncher
 > cp arduino.desktop.template arduino.desktop  
 > update **ICON** path  
-> chmod +x arduino.desktop  
+> chmod +x arduino.desktop 
+
+4. HelloWorld
+> open desktop luncher  
+> connect arduino with use cable  
+> select board  
+> select port  
+> File > Examples > Basic > Blink  
+> compile + upload  
+
+#### have fun!
+
+ 
 

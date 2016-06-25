@@ -35,3 +35,6 @@ Categories=Qt;Development;IDE;
 InitialPreference=9
 ```
 open/run it from desktop,you **CAN'T** run a .desktop file from the shell.
+
+### 4. import projects into QtCreator
+"Open File or Project" and select the top level CMakeLists.txt of the catkin workspace (e.g. "src/CMakeLists.txt")

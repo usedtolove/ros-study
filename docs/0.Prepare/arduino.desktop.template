@@ -1,0 +1,6 @@
+[Desktop Entry]
+Exec=bash -c -i arduino
+Icon=/home/hjl/program/arduino-1.6.9/lib/arduino.png
+Type=Application
+Terminal=false
+Name=arduino

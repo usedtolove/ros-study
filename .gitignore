@@ -1,6 +1,7 @@
 # ROS
 **/catkin_ws/**/devel
 **/catkin_ws/**/build
+examples/R.O.S/catkin_ws/src/rosserial
 
 # Compiled Object files
 *.slo

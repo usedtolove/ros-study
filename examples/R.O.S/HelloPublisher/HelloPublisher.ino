@@ -1,7 +1,3 @@
-/*
- * rosserial Publisher Example
- * Prints "hello world!"
- */
 /**
  * Since the arduino micro / leonardo uses USB for 
  * and its build in serial-controller both for programming and communicating, 

@@ -1,5 +1,6 @@
 /**
    HelloWorld Lego-Arduino-ROS
+   用 Arduino 控制 Lego EV3 中型马达
 */
 
 #include <Wire.h>

@@ -4,5 +4,6 @@ void setup() {
 
 void loop() {
   delay(1000);
-  Serial.println("hello ESP8266 WiFi");
+//  Serial.println("hello ESP8266 WiFi");
+  Serial.read();
 }

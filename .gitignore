@@ -1,3 +1,8 @@
+# Visual Studio
+**/__vm
+*.filters
+*.vcxproj
+
 # ROS
 **/catkin_ws/**/devel
 **/catkin_ws/**/build

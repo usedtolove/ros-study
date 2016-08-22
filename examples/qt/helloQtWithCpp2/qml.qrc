@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Led.qml</file>
+        <file>LedForm.ui.qml</file>
+    </qresource>
+</RCC>

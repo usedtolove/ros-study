@@ -23,19 +23,23 @@
 
 File myFile;
 
-const int chipSelect = 4;
+const int CS_PIN = 5;
 
 void setup() {
+
+//  pinMode(MOSI,6);
+//  pinMode(MISO,4);
+//  pinMode(SCK,5);
+  
   // Open serial communications and wait for port to open:
   Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
 
-
   Serial.print("Initializing SD card...");
 
-  if (!SD.begin(chipSelect)) {
+  if (!SD.begin(CS_PIN)) {
     Serial.println("initialization failed!");
     return;
   }

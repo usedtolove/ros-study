@@ -19,29 +19,24 @@
 #include <SPI.h>
 #include "memorysaver.h"
 
-#if defined(__arm__)
-#include <itoa.h>
-#endif
 
 #define SD_CS 5
-// set pin 4 as the slave select for SPI:
-const int SPI_CS = 10;
+#define CAM_CS 10
+//const int CAM_CS = 10;
 
 //定义摄像头 OV2640 和使用的 CS
-ArduCAM myCAM(OV2640, SPI_CS);
+ArduCAM myCAM(OV2640, CAM_CS);
 
 void setup()
 {
   uint8_t vid, pid;
   uint8_t temp;
-#if defined(__SAM3X8E__)
-  Wire1.begin();
-#else
+
   Wire.begin();
-#endif
+
   Serial.begin(115200); //启动串口
   Serial.println("ArduCAM Start!"); //输出调试信息
-  pinMode(SPI_CS, OUTPUT); // set the SPI_CS as an output:
+  pinMode(CAM_CS, OUTPUT); // set the SPI_CS as an output:
 
   // initialize SPI:
   SPI.begin();
@@ -66,106 +61,119 @@ void setup()
   myCAM.set_format(JPEG);
 
   myCAM.InitCAM();
-  //myCAM.OV2640_set_JPEG_size(OV2640_640x480);
+  myCAM.OV2640_set_JPEG_size(OV2640_640x480);
   //myCAM.OV2640_set_JPEG_size(OV2640_1600x1200);
 
   //Initialize SD Card
   if (!SD.begin(SD_CS))
   {
-    //while (1);		//If failed, stop here
     Serial.println("SD Card Error");
+    return;
   }
-  else
-    Serial.println("SD Card detected!");
+  Serial.println("SD Card detected!");
+
+  // initialize digital pin 13 as an output.
+  pinMode(13, OUTPUT);
 }
+
 
 void loop()
 {
-//  char str[8];
-//  File outFile;
-//  byte buf[256];
-//  static int i = 0;
-//  static int k = 0;
-//  static int n = 0;
-//  uint8_t temp, temp_last;
-//  uint8_t start_capture = 0;
-//  int total_time = 0;
-//  ////////////////////////////////
-//
-//  start_capture = 1;
-//  delay(5000);
-//
-//  if (start_capture)
-//  {
-//    //Flush the FIFO
-//    myCAM.flush_fifo();
-//    //Clear the capture done flag
-//    myCAM.clear_fifo_flag();
-//    //Start capture
-//    myCAM.start_capture();
-//    Serial.println("Start Capture");
-//  }
-//
-//  while (!myCAM.get_bit(ARDUCHIP_TRIG , CAP_DONE_MASK));
-//
-//
-//  Serial.println("Capture Done!");
-//
-//  //Construct a file name
-//  k = k + 1;
-//  itoa(k, str, 10);
-//  strcat(str, ".jpg");
-//  //Open the new file
-//  outFile = SD.open(str, O_WRITE | O_CREAT | O_TRUNC);
-//  if (! outFile)
-//  {
-//    Serial.println("open file failed");
-//    return;
-//  }
-//  total_time = millis();
-//  i = 0;
-//  myCAM.CS_LOW();
-//  myCAM.set_fifo_burst();
-//  temp = SPI.transfer(0x00);
-//  //
-//  //Read JPEG data from FIFO
-//  while ( (temp != 0xD9) | (temp_last != 0xFF))
-//  {
-//    temp_last = temp;
-//    temp = SPI.transfer(0x00);
-//
-//    //Write image data to buffer if not full
-//    if (i < 256)
-//      buf[i++] = temp;
-//    else
-//    {
-//      //Write 256 bytes image data to file
-//      myCAM.CS_HIGH();
-//      outFile.write(buf, 256);
-//      i = 0;
-//      buf[i++] = temp;
-//      myCAM.CS_LOW();
-//      myCAM.set_fifo_burst();
-//    }
-//  }
-//  //Write the remain bytes in the buffer
-//  if (i > 0)
-//  {
-//    myCAM.CS_HIGH();
-//    outFile.write(buf, i);
-//  }
-//  //Close the file
-//  outFile.close();
-//  total_time = millis() - total_time;
-//  Serial.print("Total time used:");
-//  Serial.print(total_time, DEC);
-//  Serial.println(" millisecond");
-//  //Clear the capture done flag
-//  myCAM.clear_fifo_flag();
-//  //Clear the start capture flag
-//  start_capture = 0;
+  char str[8];
+  File outFile;
+  byte buf[256];
+  static int i = 0;
+  static int k = 0;
+  static int n = 0;
+  uint8_t temp, temp_last;
+  uint8_t start_capture = 0;
+  int total_time = 0;
+  ////////////////////////////////
+
+  start_capture = 1; //init capture count
+  delay(5000);
+
+  if (start_capture)
+  {
+    //Flush the FIFO
+    myCAM.flush_fifo();
+    //Clear the capture done flag
+    myCAM.clear_fifo_flag();
+    //Start capture
+    myCAM.start_capture();
+    Serial.println("Start Capture");
+  }
+
+  while (!myCAM.get_bit(ARDUCHIP_TRIG , CAP_DONE_MASK));
+
+
+  Serial.println("Capture Done!");
+
+  //Construct a file name
+  k = k + 1;
+  itoa(k, str, 10); //int to string
+  strcat(str, ".jpg"); //concat suffix
+  //Open the new file
+  outFile = SD.open(str, O_WRITE | O_CREAT | O_TRUNC);
+  if (! outFile)
+  {
+    Serial.println("open file failed");
+    return;
+  }
+  total_time = millis();
+  i = 0;
+  myCAM.CS_LOW();
+  myCAM.set_fifo_burst();
+  temp = SPI.transfer(0x00);
+  //
+  //Read JPEG data from FIFO
+  while ( (temp != 0xD9) | (temp_last != 0xFF))
+  {
+    temp_last = temp;
+    temp = SPI.transfer(0x00);
+
+    //Write image data to buffer if not full
+    if (i < 256)
+      buf[i++] = temp;
+    else
+    {
+      //Write 256 bytes image data to file
+      myCAM.CS_HIGH();
+      outFile.write(buf, 256);
+      i = 0;
+      buf[i++] = temp;
+      myCAM.CS_LOW();
+      myCAM.set_fifo_burst();
+    }
+  }
+  //Write the remain bytes in the buffer
+  if (i > 0)
+  {
+    myCAM.CS_HIGH();
+    outFile.write(buf, i);
+  }
+  //Close the file
+  outFile.close();
+  total_time = millis() - total_time;
+  Serial.print("Total time used:");
+  Serial.print(total_time, DEC);
+  Serial.println(" millisecond");
+
+
+  //Blink
+  digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(250);              // wait for a second
+  digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+  delay(250);              // wait for a second
+  digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(250);              // wait for a second
+  digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+  delay(250);              // wait for a second
+
+
+  //Clear the capture done flag
+  myCAM.clear_fifo_flag();
+  //Clear the start capture flag
+  start_capture = 0;
 }
-
-
-
 
